@@ -118,9 +118,9 @@ export default function RichTextEditor({ content, onChange, onEditorReady }) {
   if (!editor) return null;
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 w-full max-w-full overflow-hidden">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-1 p-2 bg-white/60 backdrop-blur-sm rounded-xl border border-pink-100">
+      <div className="flex items-center gap-1 p-2 bg-white/60 backdrop-blur-sm rounded-xl border border-pink-100 overflow-x-auto hide-scrollbar w-full">
         
         {/* History */}
         <ToolbarButton onClick={() => editor.chain().focus().undo().run()} title="Undo" disabled={!editor.can().undo()}>
