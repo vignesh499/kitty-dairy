@@ -1,0 +1,227 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Root Variables ──────────────────────────────────────────────────────── */
+:root {
+  --bg-primary: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 50%, #e8eaf6 100%);
+  --font-primary: 'Nunito', sans-serif;
+}
+
+/* ─── Base ────────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-primary);
+  background: var(--bg-primary);
+  min-height: 100vh;
+  color: #4a3f5c;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background 0.5s ease, color 0.5s ease, background-image 0.5s ease;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ─── Scrollbar ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: rgba(252, 228, 236, 0.3); border-radius: 10px; }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #f9a8d4, #c084fc); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #f472b6, #a855f7); }
+
+/* ─── Glass Components ────────────────────────────────────────────────────── */
+@layer components {
+  .glass {
+    @apply bg-white/40 backdrop-blur-md border border-white/60 rounded-2xl shadow-glass;
+  }
+  
+  .glass-dark {
+    @apply bg-black/20 backdrop-blur-md border border-white/20 rounded-2xl;
+  }
+  
+  .card {
+    @apply bg-white/60 backdrop-blur-sm border border-white/70 rounded-2xl shadow-card;
+  }
+  
+  .btn-primary {
+    @apply px-6 py-3 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-xl font-semibold
+           hover:from-pink-500 hover:to-purple-500 active:scale-95 transition-all duration-200
+           shadow-glow hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-pink-300;
+  }
+  
+  .btn-secondary {
+    @apply px-6 py-3 bg-white/60 backdrop-blur-sm border border-pink-200 text-pink-600 rounded-xl
+           font-semibold hover:bg-pink-50 active:scale-95 transition-all duration-200 focus:outline-none;
+  }
+  
+  .btn-ghost {
+    @apply px-4 py-2 text-purple-500 hover:bg-purple-50 rounded-xl transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-purple-200;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 bg-white/70 border border-pink-200 rounded-xl text-gray-700
+           placeholder-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent
+           transition-all duration-200 backdrop-blur-sm;
+  }
+  
+  .nav-item {
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-purple-600 hover:bg-white/50
+           hover:text-pink-500 transition-all duration-200 cursor-pointer font-medium;
+  }
+  
+  .nav-item.active {
+    @apply bg-gradient-to-r from-pink-100 to-purple-100 text-pink-500 font-semibold;
+  }
+  
+  .tag {
+    @apply px-3 py-1 bg-pink-100 text-pink-600 rounded-full text-xs font-medium;
+  }
+
+  .mood-btn {
+    @apply text-2xl p-2 rounded-xl hover:scale-110 hover:bg-pink-100 transition-all duration-150
+           cursor-pointer select-none;
+  }
+  
+  .mood-btn.selected {
+    @apply bg-pink-100 scale-110 shadow-inner;
+  }
+}
+
+/* ─── TipTap Editor ───────────────────────────────────────────────────────── */
+.ProseMirror {
+  outline: none;
+  min-height: 400px;
+  padding: 1rem;
+  line-height: 1.8;
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+  color: #f9a8d4;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.ProseMirror p { margin: 0 0 0.5rem 0; }
+.ProseMirror h1, .ProseMirror h2, .ProseMirror h3 { color: #9333ea; font-weight: 700; }
+.ProseMirror strong { font-weight: 700; color: #7e22ce; }
+.ProseMirror em { font-style: italic; color: #be185d; }
+.ProseMirror u { text-decoration: underline; }
+.ProseMirror mark { background: #fce4ec; border-radius: 3px; padding: 0 2px; }
+.ProseMirror img { max-width: 100%; height: auto; border-radius: 12px; margin: 1rem 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+.ProseMirror ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 0.5rem; color: #7e22ce; }
+.ProseMirror ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 0.5rem; color: #7e22ce; }
+.ProseMirror li p { margin: 0; }
+.ProseMirror img { max-width: 100%; height: auto; border-radius: 12px; margin: 1rem 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+
+/* ─── Calendar ────────────────────────────────────────────────────────────── */
+.kitty-calendar {
+  width: 100%;
+}
+
+.kitty-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.kitty-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.kitty-day-name {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #c084fc;
+  padding: 6px 0;
+}
+
+.kitty-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s ease;
+  border: 2px solid transparent;
+}
+
+.kitty-day:hover:not(.empty) {
+  background: rgba(244, 114, 182, 0.15);
+  border-color: rgba(244, 114, 182, 0.4);
+}
+
+.kitty-day.today {
+  background: linear-gradient(135deg, #f9a8d4, #c084fc);
+  color: white;
+  font-weight: 700;
+}
+
+.kitty-day.has-entry::after {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #f472b6;
+}
+
+.kitty-day.today.has-entry::after {
+  background: white;
+}
+
+.kitty-day.selected {
+  background: linear-gradient(135deg, #ec4899, #9333ea);
+  color: white;
+  font-weight: 700;
+  box-shadow: 0 0 12px rgba(244, 114, 182, 0.5);
+}
+
+.kitty-day.other-month {
+  opacity: 0.35;
+}
+
+.kitty-day.empty {
+  cursor: default;
+}
+
+/* ─── Theme Variants ──────────────────────────────────────────────────────── */
+body[data-theme="dark"] { --bg-primary: linear-gradient(135deg, #1e1b2e 0%, #2d1b3e 50%, #1a1a2e 100%); color: #e8d5ff; }
+body[data-theme="floral"] { --bg-primary: linear-gradient(135deg, #fce4ec 0%, #fff8e1 50%, #f1f8e9 100%); }
+body[data-theme="cute"] { --bg-primary: linear-gradient(135deg, #ffe4e6 0%, #fce7f3 50%, #f5d0fe 100%); }
+body[data-theme="minimal"] { --bg-primary: #fafafa; }
+
+/* ─── Animations ──────────────────────────────────────────────────────────── */
+@keyframes sparkle {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.2) rotate(10deg); opacity: 0.8; }
+}
+
+.sparkle { animation: sparkle 1.5s ease-in-out infinite; }
+
+/* ─── Page Background ─────────────────────────────────────────────────────── */
+.diary-bg {
+  background: var(--bg-primary);
+  min-height: 100vh;
+}
