@@ -182,68 +182,70 @@ export default function DiaryPage() {
           />
 
           {/* Toolbar Row: Font + Size + Mood */}
-          <div className="flex flex-wrap items-center gap-3">
-            {/* Font Selector */}
-            <div className="relative">
-              <label className="text-xs text-purple-500 mb-1 block">Font</label>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+            <div className="grid grid-cols-2 sm:flex items-center gap-3 w-full sm:w-auto">
+              {/* Font Selector */}
               <div className="relative">
-                <select
-                  id="font-selector"
-                  value={editor?.getAttributes('textStyle').fontFamily || ''}
-                  onChange={e => {
-                    if (editor) editor.chain().focus().setFontFamily(e.target.value).run();
-                    markDirty();
-                  }}
-                  className="appearance-none pl-3 pr-8 py-2 text-sm bg-white/60 border border-pink-200
-                             rounded-xl text-purple-700 focus:outline-none focus:ring-2 focus:ring-pink-200
-                             cursor-pointer"
-                >
-                  <option value="">Default</option>
-                  {FONTS.map(f => (
-                    <option key={f.value} value={f.value} style={{ fontFamily: f.value }}>
-                      {f.label}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown size={14} className="absolute right-2 top-1/2 -translate-y-1/2 text-pink-400 pointer-events-none" />
+                <label className="text-xs text-purple-500 mb-1 block">Font</label>
+                <div className="relative">
+                  <select
+                    id="font-selector"
+                    value={editor?.getAttributes('textStyle').fontFamily || ''}
+                    onChange={e => {
+                      if (editor) editor.chain().focus().setFontFamily(e.target.value).run();
+                      markDirty();
+                    }}
+                    className="appearance-none w-full pl-3 pr-8 py-2 text-sm bg-white/60 border border-pink-200
+                               rounded-xl text-purple-700 focus:outline-none focus:ring-2 focus:ring-pink-200
+                               cursor-pointer"
+                  >
+                    <option value="">Default</option>
+                    {FONTS.map(f => (
+                      <option key={f.value} value={f.value} style={{ fontFamily: f.value }}>
+                        {f.label}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown size={14} className="absolute right-2 top-1/2 -translate-y-1/2 text-pink-400 pointer-events-none" />
+                </div>
               </div>
-            </div>
 
-            {/* Font Size */}
-            <div>
-              <label className="text-xs text-purple-500 mb-1 block">Size</label>
+              {/* Font Size */}
               <div className="relative">
-                <select
-                  id="font-size-selector"
-                  value={editor?.getAttributes('textStyle').fontSize?.replace('px', '') || ''}
-                  onChange={e => {
-                    if (editor) editor.chain().focus().setFontSize(`${e.target.value}px`).run();
-                    markDirty();
-                  }}
-                  className="appearance-none pl-3 pr-8 py-2 text-sm bg-white/60 border border-pink-200
-                             rounded-xl text-purple-700 focus:outline-none focus:ring-2 focus:ring-pink-200
-                             cursor-pointer"
-                >
-                  <option value="">Default</option>
-                  {FONT_SIZES.map(s => (
-                    <option key={s} value={s}>{s}px</option>
-                  ))}
-                </select>
-                <ChevronDown size={14} className="absolute right-2 top-1/2 -translate-y-1/2 text-pink-400 pointer-events-none" />
+                <label className="text-xs text-purple-500 mb-1 block">Size</label>
+                <div className="relative">
+                  <select
+                    id="font-size-selector"
+                    value={editor?.getAttributes('textStyle').fontSize?.replace('px', '') || ''}
+                    onChange={e => {
+                      if (editor) editor.chain().focus().setFontSize(`${e.target.value}px`).run();
+                      markDirty();
+                    }}
+                    className="appearance-none w-full pl-3 pr-8 py-2 text-sm bg-white/60 border border-pink-200
+                               rounded-xl text-purple-700 focus:outline-none focus:ring-2 focus:ring-pink-200
+                               cursor-pointer"
+                  >
+                    <option value="">Default</option>
+                    {FONT_SIZES.map(s => (
+                      <option key={s} value={s}>{s}px</option>
+                    ))}
+                  </select>
+                  <ChevronDown size={14} className="absolute right-2 top-1/2 -translate-y-1/2 text-pink-400 pointer-events-none" />
+                </div>
               </div>
             </div>
 
             {/* Mood */}
-            <div className="flex-1">
+            <div className="w-full sm:flex-1 overflow-hidden">
               <label className="text-xs text-purple-500 mb-1 block">Mood</label>
-              <div className="flex flex-wrap gap-1">
+              <div className="flex items-center gap-1 overflow-x-auto hide-scrollbar py-2 px-1 w-full mask-linear">
                 {MOODS.map(m => (
                   <button
                     key={m}
                     type="button"
                     id={`mood-${m}`}
                     onClick={() => { setMood(mood === m ? '' : m); markDirty(); }}
-                    className={`mood-btn ${mood === m ? 'selected' : ''}`}
+                    className={`mood-btn flex-shrink-0 ${mood === m ? 'selected' : ''}`}
                     title={MOOD_LABELS[m]}
                   >
                     {m}
