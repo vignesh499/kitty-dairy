@@ -39,7 +39,7 @@ export default function AppLayout() {
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto pt-16 lg:pt-0">
         <Outlet />
       </main>
     </div>
