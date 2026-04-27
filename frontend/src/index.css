@@ -259,6 +259,90 @@ body[data-theme="floral"] { --bg-primary: linear-gradient(135deg, #fce4ec 0%, #f
 body[data-theme="cute"] { --bg-primary: linear-gradient(135deg, #ffe4e6 0%, #fce7f3 50%, #f5d0fe 100%); }
 body[data-theme="minimal"] { --bg-primary: #fafafa; }
 
+/* ─── Dark Theme Overrides (Visibility Fixes) ─────────────────────────────── */
+body[data-theme="dark"] .card, 
+body[data-theme="dark"] .glass {
+  background-color: rgba(30, 27, 46, 0.6) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+body[data-theme="dark"] input, 
+body[data-theme="dark"] select,
+body[data-theme="dark"] .input-field,
+body[data-theme="dark"] textarea {
+  background-color: rgba(30, 27, 46, 0.8) !important;
+  color: #e8d5ff !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+body[data-theme="dark"] h1, 
+body[data-theme="dark"] h2, 
+body[data-theme="dark"] h3,
+body[data-theme="dark"] .text-purple-800,
+body[data-theme="dark"] .text-purple-700,
+body[data-theme="dark"] .text-gray-700,
+body[data-theme="dark"] .text-pink-600 {
+  color: #f3e8ff !important;
+}
+
+body[data-theme="dark"] .text-purple-500,
+body[data-theme="dark"] .text-purple-400,
+body[data-theme="dark"] .text-pink-500,
+body[data-theme="dark"] .text-pink-400 {
+  color: #d8b4fe !important;
+}
+
+body[data-theme="dark"] .border-pink-200,
+body[data-theme="dark"] .border-pink-100 {
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+body[data-theme="dark"] .bg-white\/60,
+body[data-theme="dark"] .bg-white\/70,
+body[data-theme="dark"] .bg-white\/50,
+body[data-theme="dark"] .bg-white {
+  background-color: rgba(30, 27, 46, 0.6) !important;
+}
+
+body[data-theme="dark"] .bg-pink-100,
+body[data-theme="dark"] .bg-purple-50,
+body[data-theme="dark"] .bg-pink-50 {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+body[data-theme="dark"] .btn-secondary {
+  background-color: rgba(30, 27, 46, 0.6) !important;
+  color: #f3e8ff !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+body[data-theme="dark"] .btn-ghost {
+  color: #f3e8ff !important;
+}
+
+body[data-theme="dark"] .btn-ghost:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+body[data-theme="dark"] .ProseMirror img {
+  background-color: rgba(30, 27, 46, 0.9) !important;
+}
+
+body[data-theme="dark"] .kitty-day-name {
+  color: #d8b4fe !important;
+}
+
+body[data-theme="dark"] .mood-btn:hover,
+body[data-theme="dark"] .mood-btn.selected {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+body[data-theme="dark"] .nav-item:hover,
+body[data-theme="dark"] .nav-item.active {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  color: #f3e8ff !important;
+}
+
 /* ─── Animations ──────────────────────────────────────────────────────────── */
 @keyframes sparkle {
   0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }

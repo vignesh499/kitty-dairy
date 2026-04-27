@@ -12,11 +12,16 @@ export default function AppLayout() {
     if (user?.preferences?.theme) {
       document.body.setAttribute('data-theme', user.preferences.theme);
     }
-    if (user?.preferences?.backgroundType === 'color') {
+    
+    const bgType = user?.preferences?.backgroundType || 'theme-default';
+    if (bgType === 'theme-default') {
+      document.body.style.background = '';
+      document.body.style.backgroundImage = '';
+    } else if (bgType === 'color') {
       document.body.style.background = user.preferences.backgroundColor;
-    } else if (user?.preferences?.backgroundType === 'gradient') {
+    } else if (bgType === 'gradient') {
       document.body.style.background = user.preferences.backgroundGradient;
-    } else if (user?.preferences?.backgroundType === 'image' && user.preferences.backgroundImage) {
+    } else if (bgType === 'image' && user.preferences.backgroundImage) {
       document.body.style.backgroundImage = `url(${user.preferences.backgroundImage})`;
       document.body.style.backgroundSize = 'cover';
       document.body.style.backgroundPosition = 'center';

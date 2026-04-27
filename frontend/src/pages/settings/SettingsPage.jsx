@@ -50,7 +50,7 @@ export default function SettingsPage() {
 
   const prefs = user?.preferences || {};
   const [theme, setTheme] = useState(prefs.theme || 'pastel');
-  const [bgType, setBgType] = useState(prefs.backgroundType || 'gradient');
+  const [bgType, setBgType] = useState(prefs.backgroundType || 'theme-default');
   const [bgColor, setBgColor] = useState(prefs.backgroundColor || '#fce4ec');
   const [bgGradient, setBgGradient] = useState(prefs.backgroundGradient || GRADIENTS[0].value);
   const [bgImage, setBgImage] = useState(prefs.backgroundImage || '');
@@ -69,7 +69,10 @@ export default function SettingsPage() {
     document.documentElement.style.setProperty('--font-main', fontFamily);
     document.documentElement.style.setProperty('--font-size-base', `${fontSize}px`);
 
-    if (bgType === 'color') {
+    if (bgType === 'theme-default') {
+      document.body.style.background = '';
+      document.body.style.backgroundImage = '';
+    } else if (bgType === 'color') {
       document.body.style.background = bgColor;
       document.body.style.backgroundImage = '';
     } else if (bgType === 'gradient') {
@@ -88,8 +91,12 @@ export default function SettingsPage() {
       document.documentElement.style.setProperty('--font-main', user?.preferences?.fontFamily || 'Nunito, sans-serif');
       document.documentElement.style.setProperty('--font-size-base', `${user?.preferences?.fontSize || 16}px`);
       
-      if (user?.preferences?.backgroundType === 'color') document.body.style.background = user.preferences.backgroundColor;
-      else if (user?.preferences?.backgroundType === 'gradient') document.body.style.background = user.preferences.backgroundGradient;
+      const prefBgType = user?.preferences?.backgroundType || 'theme-default';
+      if (prefBgType === 'theme-default') {
+        document.body.style.background = '';
+        document.body.style.backgroundImage = '';
+      } else if (prefBgType === 'color') document.body.style.background = user.preferences.backgroundColor;
+      else if (prefBgType === 'gradient') document.body.style.background = user.preferences.backgroundGradient;
       else if (user?.preferences?.backgroundType === 'image' && user.preferences.backgroundImage) {
         document.body.style.backgroundImage = `url(${user.preferences.backgroundImage})`;
       } else {
@@ -250,7 +257,10 @@ export default function SettingsPage() {
                   <button
                     key={t.id}
                     id={`theme-${t.id}`}
-                    onClick={() => setTheme(t.id)}
+                    onClick={() => {
+                      setTheme(t.id);
+                      setBgType('theme-default');
+                    }}
                     className={`p-3 rounded-xl text-sm font-medium transition-all border-2
                       ${theme === t.id ? 'border-pink-400 shadow-glow' : 'border-transparent hover:border-pink-200'}`}
                     style={{ background: t.gradient, color: t.id === 'dark' ? '#e8d5ff' : '#7e22ce' }}
@@ -264,8 +274,8 @@ export default function SettingsPage() {
             {/* Background Type */}
             <div>
               <label className="text-sm font-medium text-purple-700 mb-2 block">Background</label>
-              <div className="flex gap-2 mb-3">
-                {['color', 'gradient', 'image'].map(t => (
+              <div className="flex flex-wrap gap-2 mb-3">
+                {['theme-default', 'color', 'gradient', 'image'].map(t => (
                   <button
                     key={t}
                     id={`bg-type-${t}`}
