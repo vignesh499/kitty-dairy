@@ -22,10 +22,6 @@ const diaryEntrySchema = new mongoose.Schema(
       type: String,
       default: '',
     },
-    coverPhoto: {
-      type: String,
-      default: '',
-    },
     mood: {
       type: String,
       enum: ['', '😊', '😢', '😍', '😤', '😴', '🥳', '😰', '🤔', '😌', '🥺'],

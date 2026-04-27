@@ -82,7 +82,7 @@ const createEntry = async (req, res) => {
   }
 
   try {
-    const { date, title, content, mood, tags, fontFamily, fontSize, backgroundStyle, coverPhoto } = req.body;
+    const { date, title, content, mood, tags, fontFamily, fontSize, backgroundStyle } = req.body;
 
     // Check for existing entry on same date
     const existing = await DiaryEntry.findOne({ date, userId: req.user.id });
@@ -104,7 +104,6 @@ const createEntry = async (req, res) => {
       fontFamily,
       fontSize,
       backgroundStyle,
-      coverPhoto,
     });
 
     res.status(201).json({ success: true, message: 'Entry saved! 💖', entry });
@@ -128,7 +127,7 @@ const updateEntry = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Entry not found.' });
     }
 
-    const { title, content, mood, tags, fontFamily, fontSize, backgroundStyle, coverPhoto } = req.body;
+    const { title, content, mood, tags, fontFamily, fontSize, backgroundStyle } = req.body;
 
     entry.title = title !== undefined ? title : entry.title;
     entry.content = content !== undefined ? content : entry.content;
@@ -137,7 +136,6 @@ const updateEntry = async (req, res) => {
     entry.fontFamily = fontFamily !== undefined ? fontFamily : entry.fontFamily;
     entry.fontSize = fontSize !== undefined ? fontSize : entry.fontSize;
     entry.backgroundStyle = backgroundStyle !== undefined ? backgroundStyle : entry.backgroundStyle;
-    entry.coverPhoto = coverPhoto !== undefined ? coverPhoto : entry.coverPhoto;
 
     await entry.save();
 

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
-import { Save, Trash2, ChevronDown, Sparkles, Calendar, Image as ImageIcon } from 'lucide-react';
+import { Save, Trash2, ChevronDown, Sparkles, Calendar } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useDiary } from '../../context/DiaryContext';
 import RichTextEditor from '../../components/editor/RichTextEditor';
@@ -41,12 +41,10 @@ export default function DiaryPage() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [mood, setMood] = useState('');
-  const [coverPhoto, setCoverPhoto] = useState('');
   const [saving, setSaving] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
   const [editor, setEditor] = useState(null);
   const autoSaveRef = useRef(null);
-  const coverInputRef = useRef(null);
 
   // Load entry when selectedDate or currentEntry changes
   useEffect(() => {
@@ -54,12 +52,10 @@ export default function DiaryPage() {
       setTitle(currentEntry.title || '');
       setContent(currentEntry.content || '');
       setMood(currentEntry.mood || '');
-      setCoverPhoto(currentEntry.coverPhoto || '');
     } else {
       setTitle('');
       setContent('');
       setMood('');
-      setCoverPhoto('');
     }
     setIsDirty(false);
   }, [currentEntry, selectedDate]);
@@ -71,32 +67,15 @@ export default function DiaryPage() {
       await handleSave(true);
     }, 30000);
     return () => clearTimeout(autoSaveRef.current);
-  }, [isDirty, content, title, mood, coverPhoto]);
+  }, [isDirty, content, title, mood]);
 
   const markDirty = useCallback(() => setIsDirty(true), []);
-
-  const handleCoverUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error('Cover photo must be less than 5MB!');
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setCoverPhoto(event.target.result);
-        markDirty();
-      };
-      reader.readAsDataURL(file);
-    }
-    if (coverInputRef.current) coverInputRef.current.value = '';
-  };
 
   const handleSave = async (isAutoSave = false) => {
     if (!selectedDate) return;
     setSaving(true);
     try {
-      await saveEntry({ date: selectedDate, title, content, mood, coverPhoto });
+      await saveEntry({ date: selectedDate, title, content, mood });
       setIsDirty(false);
       if (!isAutoSave) toast.success('Entry saved! 💖');
       else toast.success('Auto-saved ✨', { duration: 1500, icon: '💾' });
@@ -129,48 +108,6 @@ export default function DiaryPage() {
   return (
     <div className="min-h-screen p-4 lg:p-6">
       <div className="max-w-4xl mx-auto">
-        {/* Cover Photo */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6 relative rounded-3xl overflow-hidden group border border-pink-100 shadow-sm bg-white/40"
-        >
-          {coverPhoto ? (
-            <div className="relative w-full h-48 sm:h-64 md:h-80">
-              <img src={coverPhoto} alt="Cover" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4 backdrop-blur-[2px]">
-                <button
-                  onClick={() => coverInputRef.current?.click()}
-                  className="px-4 py-2 bg-white/90 backdrop-blur text-purple-700 rounded-xl font-semibold hover:bg-white hover:scale-105 transition-all shadow-lg"
-                >
-                  Change Cover
-                </button>
-                <button
-                  onClick={() => { setCoverPhoto(''); markDirty(); }}
-                  className="px-4 py-2 bg-rose-500/90 backdrop-blur text-white rounded-xl font-semibold hover:bg-rose-500 hover:scale-105 transition-all shadow-lg"
-                >
-                  Remove Cover
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div
-              onClick={() => coverInputRef.current?.click()}
-              className="w-full h-32 border-2 border-dashed border-pink-200 rounded-3xl flex flex-col items-center justify-center text-pink-400 hover:text-purple-500 hover:border-purple-300 hover:bg-white/60 transition-all cursor-pointer"
-            >
-              <ImageIcon size={24} className="mb-2" />
-              <span className="font-semibold text-sm">Add Cover Photo</span>
-            </div>
-          )}
-          <input
-            type="file"
-            accept="image/*"
-            ref={coverInputRef}
-            onChange={handleCoverUpload}
-            className="hidden"
-          />
-        </motion.div>
-
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
