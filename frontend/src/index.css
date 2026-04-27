@@ -129,43 +129,53 @@ body {
 .ProseMirror em { font-style: italic; color: #be185d; }
 .ProseMirror u { text-decoration: underline; }
 .ProseMirror mark { background: #fce4ec; border-radius: 3px; padding: 0 2px; }
-.ProseMirror img { 
-  max-width: 90%; 
-  height: auto; 
-  
-  /* Washi Tape + White Polaroid Background */
-  background: 
-    linear-gradient(105deg, rgba(244, 114, 182, 0.6) 0%, rgba(244, 114, 182, 0.2) 100%) no-repeat center 8px / 110px 28px,
-    white;
-  
-  /* Polaroid Frame Padding (Top padding accommodates the tape) */
-  padding: 40px 15px 55px 15px;
-  border-radius: 6px; 
-  margin: 3rem auto; 
+.ProseMirror img {
+  /* Polaroid size — not full width, nicely centered */
+  max-width: 55%;
+  height: auto;
   display: block;
-  
-  /* Pink Glow Shadow */
-  box-shadow: 0 15px 35px -5px rgba(244, 114, 182, 0.35), 0 5px 15px -3px rgba(0, 0, 0, 0.05); 
-  
+  margin: 2.5rem auto;
+
+  /* White Polaroid frame with washi tape */
+  background:
+    linear-gradient(105deg, rgba(244,114,182,0.65) 0%, rgba(244,114,182,0.15) 100%)
+      no-repeat center 8px / 100px 24px,
+    white;
+  padding: 36px 12px 52px 12px;
+  border-radius: 4px;
+
+  /* Soft pink glow shadow */
+  box-shadow:
+    0 18px 40px -8px rgba(244,114,182,0.3),
+    0 6px 16px -4px rgba(0,0,0,0.06);
+
   /* Slight authentic tilt */
   transform: rotate(-1.5deg);
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
 }
 
-/* Alternate images get purple tape and tilt the other way */
+/* Alternate images — purple tape, other direction */
 .ProseMirror img:nth-child(even) {
   transform: rotate(2deg);
-  background: 
-    linear-gradient(95deg, rgba(192, 132, 252, 0.6) 0%, rgba(192, 132, 252, 0.2) 100%) no-repeat center 8px / 120px 28px,
+  background:
+    linear-gradient(95deg, rgba(192,132,252,0.65) 0%, rgba(192,132,252,0.15) 100%)
+      no-repeat center 8px / 110px 24px,
     white;
 }
 
-/* Float and straighten on hover */
+/* Hover: straighten, float up, stronger glow */
 .ProseMirror img:hover {
-  transform: scale(1.04) rotate(0deg) translateY(-5px);
-  box-shadow: 0 25px 45px -5px rgba(244, 114, 182, 0.5), 0 10px 20px -3px rgba(0, 0, 0, 0.1);
+  transform: scale(1.05) rotate(0deg) translateY(-6px);
+  box-shadow:
+    0 28px 50px -8px rgba(244,114,182,0.5),
+    0 10px 20px -4px rgba(0,0,0,0.1);
   z-index: 10;
   position: relative;
+}
+
+/* Mobile — allow bigger photos on small screens */
+@media (max-width: 640px) {
+  .ProseMirror img { max-width: 82%; }
 }
 
 .ProseMirror ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 0.5rem; color: #7e22ce; }

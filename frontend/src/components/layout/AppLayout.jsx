@@ -1,45 +1,43 @@
 import { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { useAuth } from '../../context/AuthContext';
+
+export function applyUserTheme(prefs = {}) {
+  const theme  = prefs.theme  || 'pastel';
+  const bgType = prefs.backgroundType || 'theme-default';
+
+  document.body.setAttribute('data-theme', theme);
+  document.body.style.background         = '';
+  document.body.style.backgroundImage    = '';
+  document.body.style.backgroundSize     = '';
+  document.body.style.backgroundPosition = '';
+  document.body.style.backgroundAttachment = '';
+
+  if (bgType === 'color') {
+    document.body.style.background = prefs.backgroundColor || '';
+  } else if (bgType === 'gradient') {
+    document.body.style.background = prefs.backgroundGradient || '';
+  } else if (bgType === 'image' && prefs.backgroundImage) {
+    document.body.style.backgroundImage      = `url(${prefs.backgroundImage})`;
+    document.body.style.backgroundSize       = 'cover';
+    document.body.style.backgroundPosition   = 'center';
+    document.body.style.backgroundAttachment = 'fixed';
+  }
+
+  if (prefs.fontFamily) document.documentElement.style.setProperty('--font-main', prefs.fontFamily);
+  if (prefs.fontSize)   document.documentElement.style.setProperty('--font-size-base', `${prefs.fontSize}px`);
+}
 
 export default function AppLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const { user } = useAuth();
+  const location = useLocation();
 
-  // Apply user theme to body
+  // Re-apply saved theme on EVERY route change so Settings preview never leaks
   useEffect(() => {
-    if (user?.preferences?.theme) {
-      document.body.setAttribute('data-theme', user.preferences.theme);
-    }
-    
-    const bgType = user?.preferences?.backgroundType || 'theme-default';
-    if (bgType === 'theme-default') {
-      document.body.style.background = '';
-      document.body.style.backgroundImage = '';
-    } else if (bgType === 'color') {
-      document.body.style.background = user.preferences.backgroundColor;
-    } else if (bgType === 'gradient') {
-      document.body.style.background = user.preferences.backgroundGradient;
-    } else if (bgType === 'image' && user.preferences.backgroundImage) {
-      document.body.style.backgroundImage = `url(${user.preferences.backgroundImage})`;
-      document.body.style.backgroundSize = 'cover';
-      document.body.style.backgroundPosition = 'center';
-      document.body.style.backgroundAttachment = 'fixed';
-    }
-
-    if (user?.preferences?.fontFamily) {
-      document.documentElement.style.setProperty('--font-main', user.preferences.fontFamily);
-    }
-    if (user?.preferences?.fontSize) {
-      document.documentElement.style.setProperty('--font-size-base', `${user.preferences.fontSize}px`);
-    }
-
-    return () => {
-      document.body.style.background = '';
-      document.body.style.backgroundImage = '';
-    };
-  }, [user?.preferences]);
+    applyUserTheme(user?.preferences || {});
+  }, [user?.preferences, location.pathname]);
 
   return (
     <div className="flex h-screen overflow-hidden">

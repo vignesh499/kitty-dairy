@@ -71,6 +71,16 @@ export default function DiaryPage() {
 
   const markDirty = useCallback(() => setIsDirty(true), []);
 
+  const handleMoodSelect = useCallback((m) => {
+    const next = mood === m ? '' : m;
+    setMood(next);
+    // Insert the emoji at the cursor in the editor
+    if (editor && next) {
+      editor.chain().focus().insertContent(next + ' ').run();
+    }
+    setIsDirty(true);
+  }, [mood, editor]);
+
   const handleSave = async (isAutoSave = false) => {
     if (!selectedDate) return;
     setSaving(true);
@@ -237,14 +247,16 @@ export default function DiaryPage() {
 
             {/* Mood */}
             <div className="w-full sm:flex-1 overflow-hidden">
-              <label className="text-xs text-purple-500 mb-1 block">Mood</label>
-              <div className="flex items-center gap-1 overflow-x-auto hide-scrollbar py-2 px-1 w-full mask-linear">
+              <label className="text-xs text-purple-500 mb-1 block">
+                Mood {mood && <span className="text-pink-400 font-semibold">— {MOOD_LABELS[mood]}</span>}
+              </label>
+              <div className="flex items-center gap-1 overflow-x-auto hide-scrollbar py-2 px-1 w-full">
                 {MOODS.map(m => (
                   <button
                     key={m}
                     type="button"
                     id={`mood-${m}`}
-                    onClick={() => { setMood(mood === m ? '' : m); markDirty(); }}
+                    onClick={() => handleMoodSelect(m)}
                     className={`mood-btn flex-shrink-0 ${mood === m ? 'selected' : ''}`}
                     title={MOOD_LABELS[m]}
                   >
