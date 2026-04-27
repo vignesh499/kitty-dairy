@@ -35,8 +35,8 @@ const userSchema = new mongoose.Schema(
       },
       backgroundType: {
         type: String,
-        enum: ['color', 'gradient', 'image'],
-        default: 'gradient',
+        enum: ['theme-default', 'color', 'gradient', 'image'],
+        default: 'theme-default',
       },
       backgroundColor: {
         type: String,
@@ -52,7 +52,7 @@ const userSchema = new mongoose.Schema(
       },
       fontFamily: {
         type: String,
-        default: 'Nunito',
+        default: 'Nunito, sans-serif',
       },
       fontSize: {
         type: Number,
