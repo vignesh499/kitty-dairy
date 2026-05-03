@@ -106,14 +106,26 @@ body {
     @apply bg-pink-100 scale-110 shadow-inner;
   }
 }
-
 /* ─── TipTap Editor ───────────────────────────────────────────────────────── */
 .ProseMirror {
   outline: none;
   min-height: 400px;
   padding: 1rem;
   line-height: 1.8;
+  color: #4a3f5c;
 }
+
+/* ── Dark mode: white readable text throughout editor ── */
+body[data-theme="dark"] .ProseMirror { color: #f0e6ff; }
+body[data-theme="dark"] .ProseMirror p.is-editor-empty:first-child::before { color: #7c5cbf; }
+body[data-theme="dark"] .ProseMirror h1,
+body[data-theme="dark"] .ProseMirror h2,
+body[data-theme="dark"] .ProseMirror h3 { color: #f3e8ff !important; }
+body[data-theme="dark"] .ProseMirror strong { color: #ffffff !important; }
+body[data-theme="dark"] .ProseMirror em { color: #f9a8d4 !important; }
+body[data-theme="dark"] .ProseMirror ul,
+body[data-theme="dark"] .ProseMirror ol { color: #d8b4fe !important; }
+
 
 .ProseMirror p.is-editor-empty:first-child::before {
   color: #f9a8d4;

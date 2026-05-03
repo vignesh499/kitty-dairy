@@ -26,12 +26,29 @@ const FONTS = [
 
 const FONT_SIZES = [12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48];
 
-const MOODS = ['😊', '😢', '😍', '😤', '😴', '🥳', '😰', '🤔', '😌', '🥺'];
+const MOODS_PRIMARY = ['😊', '😢', '😍', '😤', '😴', '🥳', '😰', '🤔', '😌', '🥺'];
+
+const MOODS_EXTRA = [
+  '😂', '🤣', '😅', '😆', '🥰', '😇', '🤩', '🥲',
+  '😑', '😒', '🙄', '😬', '😔', '😪', '🤧', '🥵',
+  '🥶', '😱', '🤯', '🤫', '🤭', '🫡', '😎', '🤓',
+  '😏', '😒', '🙃', '🫠', '🤡', '👻', '🫶', '💪',
+];
+
+const ALL_MOODS = [...MOODS_PRIMARY, ...MOODS_EXTRA];
 
 const MOOD_LABELS = {
-  '😊': 'Happy', '😢': 'Sad', '😍': 'In Love', '😤': 'Angry',
-  '😴': 'Sleepy', '🥳': 'Excited', '😰': 'Anxious', '🤔': 'Thoughtful',
-  '😌': 'Calm', '🥺': 'Emotional',
+  '😊': 'Happy',      '😢': 'Sad',         '😍': 'In Love',    '😤': 'Angry',
+  '😴': 'Sleepy',     '🥳': 'Excited',     '😰': 'Anxious',    '🤔': 'Thoughtful',
+  '😌': 'Calm',       '🥺': 'Emotional',   '😂': 'Laughing',   '🤣': 'ROFL',
+  '😅': 'Relieved',   '😆': 'Grinning',    '🥰': 'Loved',      '😇': 'Innocent',
+  '🤩': 'Starstruck', '🥲': 'Touched',     '😑': 'Expressionless','😒': 'Unamused',
+  '🙄': 'Eye-roll',   '😬': 'Grimacing',   '😔': 'Pensive',    '😪': 'Drowsy',
+  '🤧': 'Sneezing',   '🥵': 'Hot',         '🥶': 'Cold',       '😱': 'Shocked',
+  '🤯': 'Mind-blown', '🤫': 'Shushing',    '🤭': 'Oops',       '🫡': 'Saluting',
+  '😎': 'Cool',       '🤓': 'Nerdy',       '😏': 'Smirking',   '🙃': 'Upside-down',
+  '🫠': 'Melting',    '🤡': 'Clown',       '👻': 'Spooked',    '🫶': 'Heart Hands',
+  '💪': 'Strong',
 };
 
 export default function DiaryPage() {
@@ -44,7 +61,10 @@ export default function DiaryPage() {
   const [saving, setSaving] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
   const [editor, setEditor] = useState(null);
+  const [showMoreMoods, setShowMoreMoods] = useState(false);
   const autoSaveRef = useRef(null);
+
+  const isDark = user?.preferences?.theme === 'dark';
 
   // Load entry when selectedDate or currentEntry changes
   useEffect(() => {
@@ -247,15 +267,16 @@ export default function DiaryPage() {
 
             {/* Mood */}
             <div className="w-full sm:flex-1 overflow-hidden">
-              <label className="text-xs text-purple-500 mb-1 block">
-                Mood {mood && <span className="text-pink-400 font-semibold">— {MOOD_LABELS[mood]}</span>}
+              <label className={`text-xs mb-1 flex items-center gap-2 ${isDark ? 'text-purple-300' : 'text-purple-500'}`}>
+                Mood
+                {mood && <span className="text-pink-400 font-semibold">— {MOOD_LABELS[mood]}</span>}
               </label>
-              <div className="flex items-center gap-1 overflow-x-auto hide-scrollbar py-2 px-1 w-full">
-                {MOODS.map(m => (
+
+              {/* Primary row */}
+              <div className="flex items-center gap-1 overflow-x-auto hide-scrollbar py-1 px-1 w-full">
+                {MOODS_PRIMARY.map(m => (
                   <button
-                    key={m}
-                    type="button"
-                    id={`mood-${m}`}
+                    key={m} type="button" id={`mood-${m}`}
                     onClick={() => handleMoodSelect(m)}
                     className={`mood-btn flex-shrink-0 ${mood === m ? 'selected' : ''}`}
                     title={MOOD_LABELS[m]}
@@ -263,7 +284,53 @@ export default function DiaryPage() {
                     {m}
                   </button>
                 ))}
+
+                {/* Toggle more button */}
+                <button
+                  type="button"
+                  onClick={() => setShowMoreMoods(v => !v)}
+                  title={showMoreMoods ? 'Show less' : 'More emojis'}
+                  className={`flex-shrink-0 p-1.5 rounded-xl transition-all duration-200 ml-1
+                    ${ isDark
+                      ? 'bg-white/10 text-purple-300 hover:bg-white/20'
+                      : 'bg-pink-50 text-pink-400 hover:bg-pink-100'
+                    }`}
+                >
+                  <ChevronDown
+                    size={16}
+                    className={`transition-transform duration-300 ${showMoreMoods ? 'rotate-180' : ''}`}
+                  />
+                </button>
               </div>
+
+              {/* Expanded emoji grid */}
+              <AnimatePresence initial={false}>
+                {showMoreMoods && (
+                  <motion.div
+                    key="more-moods"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="overflow-hidden"
+                  >
+                    <div className={`mt-1 p-2 rounded-xl grid grid-cols-8 sm:grid-cols-10 gap-1
+                      ${ isDark ? 'bg-white/5 border border-white/10' : 'bg-pink-50/80 border border-pink-100' }`}
+                    >
+                      {MOODS_EXTRA.map(m => (
+                        <button
+                          key={m} type="button"
+                          onClick={() => { handleMoodSelect(m); setShowMoreMoods(false); }}
+                          className={`mood-btn text-xl p-1.5 ${mood === m ? 'selected' : ''}`}
+                          title={MOOD_LABELS[m] || m}
+                        >
+                          {m}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
 
