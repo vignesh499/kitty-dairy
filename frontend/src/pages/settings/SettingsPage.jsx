@@ -3,10 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { authAPI, entriesAPI } from '../../api';
 import toast from 'react-hot-toast';
-import { Palette, Type, Lock, Download, ChevronDown, Check } from 'lucide-react';
+import { Palette, Type, Lock, Download, ChevronDown, Check, MousePointer2 } from 'lucide-react';
 import { HexColorPicker } from 'react-colorful';
 import { useDiary } from '../../context/DiaryContext';
 import { applyUserTheme } from '../../components/layout/AppLayout';
+import { CURSOR_STYLES, CURSOR_COLORS, CursorSVG, loadCursorPrefs, saveCursorPrefs } from '../../components/effects/cursorConfig';
 
 /* ─────────────────────────────────────────────────────────────
    Static data
@@ -177,6 +178,7 @@ export default function SettingsPage() {
   const [saving,     setSaving]     = useState(false);
   const [exportLoading, setExportLoading] = useState(false);
   const [activeSection, setActiveSection] = useState('appearance');
+  const [cursorPrefs, setCursorPrefs] = useState(loadCursorPrefs);
   const colorPickerRef = useRef(null);
 
   const isDark   = theme === 'dark';
@@ -377,6 +379,92 @@ export default function SettingsPage() {
             <button id="save-typography-btn" onClick={handleSavePreferences} disabled={saving} className="btn-primary w-full">
               {saving ? 'Saving...' : '💾 Save Typography'}
             </button>
+          </div>
+        </Section>
+
+        {/* ── CURSOR STYLE ─────────────────────────────────────── */}
+        <Section id="cursor" title="Cursor Style 🖱️" icon={MousePointer2} activeSection={activeSection} onToggle={onToggle} isDark={isDark}>
+          <div className="space-y-5 pt-5">
+            <p className={`text-sm ${subCls}`}>Choose your cursor shape and colour (desktop only). Changes apply instantly!</p>
+
+            {/* Shape grid */}
+            <div>
+              <p className={`text-sm font-semibold mb-3 ${labelCls}`}>Shape</p>
+              <div className="grid grid-cols-4 gap-2">
+                {CURSOR_STYLES.map(s => {
+                  const activeColor = CURSOR_COLORS.find(c => c.id === cursorPrefs.colorId)?.hex ?? '#f472b6';
+                  const isActive = cursorPrefs.style === s.id;
+                  return (
+                    <button
+                      key={s.id}
+                      id={`cursor-style-${s.id}`}
+                      onClick={() => {
+                        const next = { ...cursorPrefs, style: s.id };
+                        setCursorPrefs(next);
+                        saveCursorPrefs(next);
+                      }}
+                      className={`flex flex-col items-center gap-2 p-3 rounded-2xl border-2 transition-all
+                        ${ isActive
+                          ? (isDark ? 'border-purple-400 bg-white/10 scale-105' : 'border-pink-400 bg-pink-50 scale-105')
+                          : (isDark ? 'border-white/10 bg-white/5 hover:bg-white/10' : 'border-pink-100 bg-white/60 hover:bg-pink-50')
+                        }`}
+                    >
+                      <div className="w-8 h-8 flex items-center justify-center">
+                        <CursorSVG styleId={s.id} color={activeColor} size={24} />
+                      </div>
+                      <span className={`text-xs font-medium ${isDark ? 'text-purple-200' : 'text-purple-700'}`}>
+                        {s.label}
+                      </span>
+                      {isActive && (
+                        <span className="absolute top-1 right-1">
+                          <Check size={10} className="text-pink-400" />
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Color palette */}
+            <div>
+              <p className={`text-sm font-semibold mb-3 ${labelCls}`}>Colour</p>
+              <div className="flex flex-wrap gap-3">
+                {CURSOR_COLORS.map(c => (
+                  <button
+                    key={c.id}
+                    id={`cursor-color-${c.id}`}
+                    title={c.label}
+                    onClick={() => {
+                      const next = { ...cursorPrefs, colorId: c.id };
+                      setCursorPrefs(next);
+                      saveCursorPrefs(next);
+                    }}
+                    style={{ background: c.hex }}
+                    className={`w-8 h-8 rounded-full border-2 transition-all hover:scale-125
+                      ${ cursorPrefs.colorId === c.id
+                        ? 'border-white scale-125 shadow-lg ring-2 ring-pink-400 ring-offset-1'
+                        : 'border-white/50 hover:border-white'
+                      }`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Live preview */}
+            <div className={`flex items-center gap-4 px-4 py-3 rounded-xl ${isDark ? 'bg-white/5 border border-white/10' : 'bg-pink-50 border border-pink-100'}`}>
+              <CursorSVG
+                styleId={cursorPrefs.style}
+                color={CURSOR_COLORS.find(c => c.id === cursorPrefs.colorId)?.hex ?? '#f472b6'}
+                size={28}
+              />
+              <div>
+                <p className={`text-sm font-semibold ${labelCls}`}>Live Preview</p>
+                <p className={`text-xs ${subCls}`}>
+                  {CURSOR_STYLES.find(s => s.id === cursorPrefs.style)?.label} · {CURSOR_COLORS.find(c => c.id === cursorPrefs.colorId)?.label}
+                </p>
+              </div>
+            </div>
           </div>
         </Section>
 
