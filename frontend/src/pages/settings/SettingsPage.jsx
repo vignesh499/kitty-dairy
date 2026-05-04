@@ -403,14 +403,14 @@ export default function SettingsPage() {
                         setCursorPrefs(next);
                         saveCursorPrefs(next);
                       }}
-                      className={`flex flex-col items-center gap-2 p-3 rounded-2xl border-2 transition-all
+                      className={`relative flex flex-col items-center gap-2 p-3 rounded-2xl border-2 transition-all
                         ${ isActive
                           ? (isDark ? 'border-purple-400 bg-white/10 scale-105' : 'border-pink-400 bg-pink-50 scale-105')
                           : (isDark ? 'border-white/10 bg-white/5 hover:bg-white/10' : 'border-pink-100 bg-white/60 hover:bg-pink-50')
                         }`}
                     >
                       <div className="w-8 h-8 flex items-center justify-center">
-                        <CursorSVG styleId={s.id} color={activeColor} size={24} />
+                        <CursorSVG styleId={s.id} color={activeColor} size={24} ns={`prev-${s.id}`} />
                       </div>
                       <span className={`text-xs font-medium ${isDark ? 'text-purple-200' : 'text-purple-700'}`}>
                         {s.label}
@@ -457,6 +457,7 @@ export default function SettingsPage() {
                 styleId={cursorPrefs.style}
                 color={CURSOR_COLORS.find(c => c.id === cursorPrefs.colorId)?.hex ?? '#f472b6'}
                 size={28}
+                ns="settings-preview"
               />
               <div>
                 <p className={`text-sm font-semibold ${labelCls}`}>Live Preview</p>

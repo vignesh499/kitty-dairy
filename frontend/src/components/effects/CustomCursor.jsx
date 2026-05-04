@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import { CursorSVG, CURSOR_COLORS, loadCursorPrefs, CURSOR_PREF_KEY } from './cursorConfig';
+import { CursorSVG, CURSOR_COLORS, loadCursorPrefs } from './cursorConfig';
 
 export default function CustomCursor() {
-  const containerRef = useRef(null);
-  const pos          = useRef({ x: -200, y: -200 });
-  const [visible,    setVisible]    = useState(false);
-  const [prefs,      setPrefs]      = useState(loadCursorPrefs);
+  const cursorRef = useRef(null);
+  const posRef    = useRef({ x: -100, y: -100 });
+  const rafRef    = useRef(null);
+  const [ready, setReady]  = useState(false);
+  const [prefs, setPrefs]  = useState(loadCursorPrefs);
 
-  // Listen for live preference changes from Settings
+  // Live-update when user changes cursor in Settings
   useEffect(() => {
     const handler = (e) => setPrefs(e.detail);
     window.addEventListener('kitty-cursor-change', handler);
@@ -15,58 +16,56 @@ export default function CustomCursor() {
   }, []);
 
   useEffect(() => {
-    // Only on mouse-driven devices
+    // Touch devices don't need a custom cursor
     if (window.matchMedia('(pointer: coarse)').matches) return;
 
-    const el = containerRef.current;
+    const el = cursorRef.current;
     if (!el) return;
 
-    let animId;
-
     const onMove = (e) => {
-      pos.current = { x: e.clientX, y: e.clientY };
-      setVisible(true);
+      posRef.current = { x: e.clientX, y: e.clientY };
+      // Show cursor on first move
+      if (!ready) setReady(true);
     };
-    const onLeave  = () => setVisible(false);
-    const onEnter  = () => setVisible(true);
 
-    window.addEventListener('mousemove',        onMove);
-    document.addEventListener('mouseleave',     onLeave);
-    document.addEventListener('mouseenter',     onEnter);
+    window.addEventListener('mousemove', onMove, { passive: true });
 
-    const animate = () => {
-      el.style.transform = `translate(${pos.current.x - 8}px, ${pos.current.y - 8}px)`;
-      animId = requestAnimationFrame(animate);
+    // RAF loop — always runs, just moves the element
+    const tick = () => {
+      el.style.transform = `translate(${posRef.current.x - 10}px, ${posRef.current.y - 10}px)`;
+      rafRef.current = requestAnimationFrame(tick);
     };
-    animate();
+    rafRef.current = requestAnimationFrame(tick);
 
     return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener('mousemove',    onMove);
-      document.removeEventListener('mouseleave', onLeave);
-      document.removeEventListener('mouseenter', onEnter);
+      window.removeEventListener('mousemove', onMove);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Don't render on touch devices
-  if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) return null;
+  // Skip rendering entirely on touch devices (SSR-safe check)
+  if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) {
+    return null;
+  }
 
   const color = CURSOR_COLORS.find(c => c.id === prefs.colorId)?.hex ?? '#f472b6';
 
   return (
     <div
-      ref={containerRef}
+      ref={cursorRef}
       style={{
         position: 'fixed',
-        top: 0, left: 0,
+        top: 0,
+        left: 0,
         pointerEvents: 'none',
-        zIndex: 9999,
-        opacity: visible ? 1 : 0,
-        transition: 'opacity 0.15s',
+        zIndex: 99999,           // above everything including modals
+        opacity: ready ? 1 : 0, // invisible until first mouse move
         willChange: 'transform',
+        // No transition on transform — we want instant tracking
       }}
     >
-      <CursorSVG styleId={prefs.style} color={color} size={20} />
+      {/* ns="live" keeps these SVG IDs separate from the Settings preview */}
+      <CursorSVG styleId={prefs.style} color={color} size={22} ns="live" />
     </div>
   );
 }
