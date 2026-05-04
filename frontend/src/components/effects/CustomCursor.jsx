@@ -1,49 +1,70 @@
 import { useEffect, useRef, useState } from 'react';
-import { CursorSVG, CURSOR_COLORS, loadCursorPrefs } from './cursorConfig';
+import { CursorSVG, CURSOR_COLORS, loadCursorPrefs, CURSOR_PREF_KEY } from './cursorConfig';
 
 export default function CustomCursor() {
-  const cursorRef = useRef(null);
-  const posRef    = useRef({ x: -100, y: -100 });
-  const rafRef    = useRef(null);
-  const [ready, setReady]  = useState(false);
-  const [prefs, setPrefs]  = useState(loadCursorPrefs);
+  const wrapRef = useRef(null);
+  // prefs is the ONLY React state — controls which SVG to render
+  const [prefs, setPrefs] = useState(loadCursorPrefs);
 
-  // Live-update when user changes cursor in Settings
+  // ── Effect 1: Listen for preference changes (Settings → Cursor) ──
   useEffect(() => {
-    const handler = (e) => setPrefs(e.detail);
-    window.addEventListener('kitty-cursor-change', handler);
-    return () => window.removeEventListener('kitty-cursor-change', handler);
+    // Custom event fired by Settings page immediately on change
+    const onCustom = (e) => setPrefs({ ...e.detail });
+
+    // Storage event fires when another tab or when localStorage is updated
+    // This is a reliable fallback across re-mounts
+    const onStorage = (e) => {
+      if (e.key === CURSOR_PREF_KEY) {
+        try { setPrefs(JSON.parse(e.newValue)); } catch (_) {}
+      }
+    };
+
+    window.addEventListener('kitty-cursor-change', onCustom);
+    window.addEventListener('storage', onStorage);
+    return () => {
+      window.removeEventListener('kitty-cursor-change', onCustom);
+      window.removeEventListener('storage', onStorage);
+    };
   }, []);
 
+  // ── Effect 2: Mouse tracking — fully DOM-based, no React state ──
   useEffect(() => {
-    // Touch devices don't need a custom cursor
     if (window.matchMedia('(pointer: coarse)').matches) return;
 
-    const el = cursorRef.current;
+    const el = wrapRef.current;
     if (!el) return;
 
+    // Local variables — never touch React state here
+    let x = -100, y = -100;
+    let shown = false;
+    let rafId;
+
     const onMove = (e) => {
-      posRef.current = { x: e.clientX, y: e.clientY };
-      // Show cursor on first move
-      if (!ready) setReady(true);
+      x = e.clientX;
+      y = e.clientY;
+      // Show on first move — direct DOM manipulation, no setState
+      if (!shown) {
+        el.style.opacity = '1';
+        shown = true;
+      }
     };
 
     window.addEventListener('mousemove', onMove, { passive: true });
 
-    // RAF loop — always runs, just moves the element
+    // Continuous RAF loop — direct style update, no React involvement
     const tick = () => {
-      el.style.transform = `translate(${posRef.current.x - 10}px, ${posRef.current.y - 10}px)`;
-      rafRef.current = requestAnimationFrame(tick);
+      el.style.transform = `translate(${x - 10}px, ${y - 10}px)`;
+      rafId = requestAnimationFrame(tick);
     };
-    rafRef.current = requestAnimationFrame(tick);
+    rafId = requestAnimationFrame(tick);
 
     return () => {
       window.removeEventListener('mousemove', onMove);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      cancelAnimationFrame(rafId);
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // Runs once, manages its own state via closures
 
-  // Skip rendering entirely on touch devices (SSR-safe check)
+  // Don't render on touch/mobile
   if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) {
     return null;
   }
@@ -52,19 +73,17 @@ export default function CustomCursor() {
 
   return (
     <div
-      ref={cursorRef}
+      ref={wrapRef}
       style={{
         position: 'fixed',
         top: 0,
         left: 0,
         pointerEvents: 'none',
-        zIndex: 99999,           // above everything including modals
-        opacity: ready ? 1 : 0, // invisible until first mouse move
+        zIndex: 99999,
+        opacity: 0,           // starts hidden, shown via direct DOM on first mousemove
         willChange: 'transform',
-        // No transition on transform — we want instant tracking
       }}
     >
-      {/* ns="live" keeps these SVG IDs separate from the Settings preview */}
       <CursorSVG styleId={prefs.style} color={color} size={22} ns="live" />
     </div>
   );

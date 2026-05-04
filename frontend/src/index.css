@@ -28,9 +28,19 @@ body {
   transition: background 0.5s ease, color 0.5s ease, background-image 0.5s ease;
 }
 
-/* Hide native cursor on desktop so our custom cursor takes over */
+/* Hide native cursor everywhere on desktop — our custom cursor takes over */
 @media (pointer: fine) {
-  body, body * { cursor: none !important; }
+  *,
+  *::before,
+  *::after,
+  input,
+  button,
+  a,
+  select,
+  textarea,
+  [role="button"] {
+    cursor: none !important;
+  }
 }
 
 #root {
