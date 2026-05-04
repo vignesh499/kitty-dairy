@@ -76,7 +76,7 @@ export default function Sidebar({ collapsed, setCollapsed }) {
         {!collapsed && (
           <div className="flex items-center gap-2">
             <span className="text-2xl">📖</span>
-            <span className="font-bold font-playfair text-lg bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+            <span className="font-bold font-playfair text-lg logo-shimmer">
               Kitty's Diary
             </span>
           </div>

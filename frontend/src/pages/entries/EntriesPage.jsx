@@ -74,8 +74,8 @@ export default function EntriesPage() {
           <h1 className="text-2xl font-bold font-playfair text-purple-800 mb-1">
             📚 All Entries
           </h1>
-          <p className="text-purple-400 text-sm">
-            {entries.length} {entries.length === 1 ? 'memory' : 'memories'} written
+          <p className="text-purple-400 text-sm" style={{ fontFamily: '"Caveat", cursive', fontSize: '1rem' }}>
+            {entries.length} {entries.length === 1 ? 'memory' : 'memories'} written ✨
           </p>
         </motion.div>
 
@@ -140,15 +140,15 @@ export default function EntriesPage() {
             </p>
           </motion.div>
         ) : (
-          <AnimatePresence>
-            <div className="space-y-3">
+          <div className="space-y-3">
               {entries.map((entry, i) => (
                 <motion.div
                   key={entry._id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  whileHover={{ x: 4 }}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-40px' }}
+                  transition={{ duration: 0.45, delay: Math.min(i * 0.06, 0.4), ease: [0.22, 1, 0.36, 1] }}
+                  whileHover={{ x: 6, transition: { duration: 0.2 } }}
                   onClick={() => handleEntryClick(entry)}
                   className={`card p-5 cursor-pointer border border-white/60 hover:border-pink-200
                               hover:shadow-glow transition-all duration-200 group
@@ -158,7 +158,10 @@ export default function EntriesPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <Calendar size={13} className="text-pink-400 flex-shrink-0" />
-                        <span className="text-xs text-purple-400 font-medium">
+                        <span
+                          className="text-purple-400 font-medium"
+                          style={{ fontFamily: '"Caveat", cursive', fontSize: '1rem' }}
+                        >
                           {format(parseISO(entry.date), 'EEEE, MMMM d, yyyy')}
                         </span>
                       </div>
@@ -181,7 +184,6 @@ export default function EntriesPage() {
                 </motion.div>
               ))}
             </div>
-          </AnimatePresence>
         )}
       </div>
     </div>
