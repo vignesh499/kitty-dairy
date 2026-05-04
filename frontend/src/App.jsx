@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { DiaryProvider } from './context/DiaryContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import AppLayout from './components/layout/AppLayout';
+import CustomCursor from './components/effects/CustomCursor';
 import LoginPage from './pages/auth/LoginPage';
 import SignupPage from './pages/auth/SignupPage';
 import PinLockPage from './pages/auth/PinLockPage';
@@ -50,6 +51,7 @@ export default function App() {
               error: { iconTheme: { primary: '#f43f5e', secondary: 'white' } },
             }}
           />
+          <CustomCursor />
           <Routes>
             {/* Public routes */}
             <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />

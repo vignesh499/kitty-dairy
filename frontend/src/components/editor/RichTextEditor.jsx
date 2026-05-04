@@ -224,16 +224,29 @@ export default function RichTextEditor({ content, onChange, onEditorReady }) {
 
         <div className="w-px h-5 bg-pink-200 mx-1" />
 
-        {/* Text Color */}
-        <div className="flex items-center gap-1">
-          <span className="text-xs text-purple-500">Color:</span>
-          <input
-            type="color"
-            title="Text Color"
-            defaultValue="#4a3f5c"
-            onChange={e => editor.chain().focus().setColor(e.target.value).run()}
-            className="w-7 h-7 rounded cursor-pointer border border-pink-200 p-0.5 bg-white"
-          />
+        {/* Text Color — preset swatches */}
+        <div className="flex items-center gap-1 ml-1">
+          {[
+            '#4a3f5c', // default dark purple
+            '#ec4899', // pink
+            '#a855f7', // purple
+            '#3b82f6', // blue
+            '#10b981', // green
+            '#f59e0b', // amber
+            '#ef4444', // red
+            '#ffffff', // white
+          ].map(color => (
+            <button
+              key={color}
+              type="button"
+              title={`Text color: ${color}`}
+              onClick={() => editor.chain().focus().setColor(color).run()}
+              style={{ background: color }}
+              className={`w-4 h-4 rounded-full border transition-transform hover:scale-125
+                ${color === '#ffffff' ? 'border-pink-200' : 'border-white/60'}
+                ${editor.isActive('textStyle', { color }) ? 'ring-2 ring-pink-400 ring-offset-1 scale-125' : ''}`}
+            />
+          ))}
         </div>
       </div>
 
