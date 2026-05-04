@@ -29,26 +29,42 @@ const FONT_SIZES = [12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48];
 const MOODS_PRIMARY = ['😊', '😢', '😍', '😤', '😴', '🥳', '😰', '🤔', '😌', '🥺'];
 
 const MOODS_EXTRA = [
+  // ── Faces ──────────────────────────────────────
   '😂', '🤣', '😅', '😆', '🥰', '😇', '🤩', '🥲',
   '😑', '😒', '🙄', '😬', '😔', '😪', '🤧', '🥵',
   '🥶', '😱', '🤯', '🤫', '🤭', '🫡', '😎', '🤓',
-  '😏', '😒', '🙃', '🫠', '🤡', '👻', '🫶', '💪',
+  '😏', '🙃', '🫠', '🤡', '👻', '🫶', '💪', '🥹',
+  // ── Hearts ─────────────────────────────────────
+  '❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍',
+  '🤎', '💕', '💞', '💓', '💗', '💖', '💘', '💝',
+  '💟', '❣️', '💔', '❤️‍🔥', '❤️‍🩹', '💌', '💋', '🫀',
 ];
 
 const ALL_MOODS = [...MOODS_PRIMARY, ...MOODS_EXTRA];
 
 const MOOD_LABELS = {
-  '😊': 'Happy',      '😢': 'Sad',         '😍': 'In Love',    '😤': 'Angry',
-  '😴': 'Sleepy',     '🥳': 'Excited',     '😰': 'Anxious',    '🤔': 'Thoughtful',
-  '😌': 'Calm',       '🥺': 'Emotional',   '😂': 'Laughing',   '🤣': 'ROFL',
-  '😅': 'Relieved',   '😆': 'Grinning',    '🥰': 'Loved',      '😇': 'Innocent',
-  '🤩': 'Starstruck', '🥲': 'Touched',     '😑': 'Expressionless','😒': 'Unamused',
-  '🙄': 'Eye-roll',   '😬': 'Grimacing',   '😔': 'Pensive',    '😪': 'Drowsy',
-  '🤧': 'Sneezing',   '🥵': 'Hot',         '🥶': 'Cold',       '😱': 'Shocked',
-  '🤯': 'Mind-blown', '🤫': 'Shushing',    '🤭': 'Oops',       '🫡': 'Saluting',
-  '😎': 'Cool',       '🤓': 'Nerdy',       '😏': 'Smirking',   '🙃': 'Upside-down',
-  '🫠': 'Melting',    '🤡': 'Clown',       '👻': 'Spooked',    '🫶': 'Heart Hands',
-  '💪': 'Strong',
+  // Primary
+  '😊': 'Happy',        '😢': 'Sad',           '😍': 'In Love',      '😤': 'Angry',
+  '😴': 'Sleepy',       '🥳': 'Excited',       '😰': 'Anxious',      '🤔': 'Thoughtful',
+  '😌': 'Calm',         '🥺': 'Emotional',
+  // Faces extra
+  '😂': 'Laughing',     '🤣': 'ROFL',          '😅': 'Relieved',     '😆': 'Grinning',
+  '🥰': 'Loved',        '😇': 'Innocent',      '🤩': 'Starstruck',   '🥲': 'Touched',
+  '😑': 'Expressionless','😒': 'Unamused',     '🙄': 'Eye-roll',     '😬': 'Grimacing',
+  '😔': 'Pensive',      '😪': 'Drowsy',        '🤧': 'Sneezing',     '🥵': 'Hot',
+  '🥶': 'Cold',         '😱': 'Shocked',       '🤯': 'Mind-blown',   '🤫': 'Shushing',
+  '🤭': 'Oops',         '🫡': 'Saluting',      '😎': 'Cool',         '🤓': 'Nerdy',
+  '😏': 'Smirking',     '🙃': 'Upside-down',   '🫠': 'Melting',      '🤡': 'Clown',
+  '👻': 'Spooked',      '🫶': 'Heart Hands',   '💪': 'Strong',       '🥹': 'Grateful',
+  // Hearts
+  '❤️':    'Red Heart',      '🧡': 'Orange Heart',  '💛': 'Yellow Heart',
+  '💚':    'Green Heart',    '💙': 'Blue Heart',    '💜': 'Purple Heart',
+  '🖤':    'Black Heart',    '🤍': 'White Heart',   '🤎': 'Brown Heart',
+  '💕':    'Two Hearts',     '💞': 'Revolving Hearts','💓': 'Beating Heart',
+  '💗':    'Growing Heart',  '💖': 'Sparkling Heart','💘': 'Heart with Arrow',
+  '💝':    'Heart with Ribbon','💟': 'Heart Decoration','❣️': 'Heart Exclamation',
+  '💔':    'Broken Heart',   '❤️‍🔥': 'Heart on Fire', '❤️‍🩹': 'Healing Heart',
+  '💌':    'Love Letter',    '💋': 'Kiss',           '🫀': 'Anatomical Heart',
 };
 
 export default function DiaryPage() {
@@ -314,19 +330,49 @@ export default function DiaryPage() {
                     transition={{ duration: 0.25 }}
                     className="overflow-hidden"
                   >
-                    <div className={`mt-1 p-2 rounded-xl grid grid-cols-8 sm:grid-cols-10 gap-1
+                    <div className={`mt-1 p-3 rounded-xl space-y-3
                       ${ isDark ? 'bg-white/5 border border-white/10' : 'bg-pink-50/80 border border-pink-100' }`}
                     >
-                      {MOODS_EXTRA.map(m => (
-                        <button
-                          key={m} type="button"
-                          onClick={() => { handleMoodSelect(m); setShowMoreMoods(false); }}
-                          className={`mood-btn text-xl p-1.5 ${mood === m ? 'selected' : ''}`}
-                          title={MOOD_LABELS[m] || m}
-                        >
-                          {m}
-                        </button>
-                      ))}
+                      {/* Expressions */}
+                      <div>
+                        <p className={`text-xs font-semibold mb-1.5 px-1 ${isDark ? 'text-purple-300' : 'text-purple-400'}`}>
+                          😄 Expressions
+                        </p>
+                        <div className="grid grid-cols-8 sm:grid-cols-10 gap-1">
+                          {MOODS_EXTRA.filter(m => !['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💕','💞','💓','💗','💖','💘','💝','💟','❣️','💔','❤️‍🔥','❤️‍🩹','💌','💋','🫀'].includes(m)).map(m => (
+                            <button
+                              key={m} type="button"
+                              onClick={() => { handleMoodSelect(m); setShowMoreMoods(false); }}
+                              className={`mood-btn text-xl p-1.5 ${mood === m ? 'selected' : ''}`}
+                              title={MOOD_LABELS[m] || m}
+                            >
+                              {m}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Hearts divider */}
+                      <div className={`border-t ${isDark ? 'border-white/10' : 'border-pink-200'}`} />
+
+                      {/* Hearts */}
+                      <div>
+                        <p className={`text-xs font-semibold mb-1.5 px-1 ${isDark ? 'text-pink-300' : 'text-pink-500'}`}>
+                          💕 Hearts
+                        </p>
+                        <div className="grid grid-cols-8 sm:grid-cols-10 gap-1">
+                          {['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💕','💞','💓','💗','💖','💘','💝','💟','❣️','💔','❤️‍🔥','❤️‍🩹','💌','💋','🫀'].map(m => (
+                            <button
+                              key={m} type="button"
+                              onClick={() => { handleMoodSelect(m); setShowMoreMoods(false); }}
+                              className={`mood-btn text-xl p-1.5 ${mood === m ? 'selected' : ''}`}
+                              title={MOOD_LABELS[m] || m}
+                            >
+                              {m}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </motion.div>
                 )}
