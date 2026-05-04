@@ -141,79 +141,71 @@ body[data-theme="dark"] .ProseMirror ol { color: #d8b4fe !important; }
 .ProseMirror em { font-style: italic; color: #be185d; }
 .ProseMirror u { text-decoration: underline; }
 .ProseMirror mark { background: #fce4ec; border-radius: 3px; padding: 0 2px; }
-/* ── Polaroid Scrapbook ──────────────────────────────────────────────────── */
+/* ── Floating Soft Card ──────────────────────────────────────────────────── */
 .ProseMirror img {
-  /* Force a max width regardless of original size — !important overrides TipTap inline attrs */
+  /* Fixed pixel max-width — always stays small regardless of original photo size */
   width: auto !important;
-  max-width: 52% !important;
+  max-width: 300px !important;
   height: auto !important;
 
-  /* Centre on the page */
+  /* Centred in the editor */
   display: block !important;
-  margin: 3rem auto !important;
+  margin: 1.8rem auto !important;
 
-  /* ── Polaroid white frame ── */
-  background: white;
-  padding: 10px 10px 44px 10px;   /* thick bottom = polaroid label area  */
-  border-radius: 3px;
+  /* Large smooth rounded corners */
+  border-radius: 20px !important;
 
-  /* ── Pink washi tape strip across the top-center ── */
-  outline: none;
-  position: relative;
+  /* No padding, no tilt, no tape — clean card */
+  padding: 0 !important;
+  background: transparent !important;
+  transform: translateY(0px);
 
-  /* Soft pink glow + paper drop-shadow */
+  /* Dreamy multi-layer shadow: white ring + pink glow + purple depth */
   box-shadow:
-    0 2px 0   0   rgba(0,0,0,0.06),          /* bottom paper edge */
-    0 6px 20px -4px rgba(0,0,0,0.12),         /* soft lift shadow  */
-    0 20px 40px -8px rgba(244,114,182,0.25);  /* pink glow         */
+    0 0 0 4px rgba(255, 255, 255, 0.85),       /* crisp white border ring */
+    0 8px 24px -4px rgba(244, 114, 182, 0.40), /* pink glow layer         */
+    0 20px 48px -8px rgba(192, 132, 252, 0.28),/* purple depth layer      */
+    0 4px 8px -2px rgba(0, 0, 0, 0.10);        /* subtle base shadow      */
 
-  /* Slight random tilt for authenticity */
-  transform: rotate(-1.8deg);
-  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1),
-              box-shadow 0.4s ease;
-
-  /* Washi tape painted via filter — real tape via pseudo not possible on <img>,
-     so we use a gradient on the white background of the polaroid */
-  background:
-    /* pink washi tape strip */
-    linear-gradient(
-      108deg,
-      rgba(249,168,212,0.75) 0%,
-      rgba(244,114,182,0.45) 50%,
-      rgba(249,168,212,0.75) 100%
-    ) no-repeat center top / 96px 22px,
-    white;
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.35s ease;
 }
 
-/* Every even image gets purple tape and tilts the other way */
-.ProseMirror img:nth-child(even) {
-  transform: rotate(2.2deg);
-  background:
-    linear-gradient(
-      95deg,
-      rgba(216,180,254,0.8) 0%,
-      rgba(192,132,252,0.5) 50%,
-      rgba(216,180,254,0.8) 100%
-    ) no-repeat center top / 110px 22px,
-    white;
-}
-
-/* Hover: straighten, float up, glow intensifies */
+/* Hover: float up + intensify glow */
 .ProseMirror img:hover {
-  transform: scale(1.04) rotate(0deg) translateY(-8px) !important;
+  transform: translateY(-8px) scale(1.03) !important;
   box-shadow:
-    0 2px 0   0   rgba(0,0,0,0.06),
-    0 12px 30px -6px rgba(0,0,0,0.18),
-    0 30px 60px -10px rgba(244,114,182,0.45) !important;
+    0 0 0 4px rgba(255, 255, 255, 0.95),
+    0 16px 40px -6px rgba(244, 114, 182, 0.60),
+    0 28px 64px -10px rgba(192, 132, 252, 0.45),
+    0 8px 16px -4px rgba(0, 0, 0, 0.14) !important;
   z-index: 20;
+  position: relative;
 }
 
-/* Mobile: let polaroid be a bit wider */
+/* Mobile: slightly wider so it doesn't look tiny on small screens */
 @media (max-width: 640px) {
   .ProseMirror img {
-    max-width: 80% !important;
-    padding: 8px 8px 38px 8px;
+    max-width: 75% !important;
+    border-radius: 16px !important;
   }
+}
+
+/* Dark mode: stronger white ring so card stands out on dark background */
+body[data-theme="dark"] .ProseMirror img {
+  box-shadow:
+    0 0 0 4px rgba(255, 255, 255, 0.15),
+    0 8px 24px -4px rgba(244, 114, 182, 0.50),
+    0 20px 48px -8px rgba(192, 132, 252, 0.40),
+    0 4px 8px -2px rgba(0, 0, 0, 0.40) !important;
+}
+body[data-theme="dark"] .ProseMirror img:hover {
+  box-shadow:
+    0 0 0 4px rgba(255, 255, 255, 0.25),
+    0 16px 40px -6px rgba(244, 114, 182, 0.70),
+    0 28px 64px -10px rgba(192, 132, 252, 0.55),
+    0 8px 16px -4px rgba(0, 0, 0, 0.50) !important;
 }
 
 .ProseMirror ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 0.5rem; color: #7e22ce; }
