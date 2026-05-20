@@ -295,14 +295,17 @@ body[data-theme="dark"] .ProseMirror img:hover {
 .kitty-day {
   aspect-ratio: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  font-size: 0.85rem;
+  border-radius: 10px;
+  font-size: 0.72rem;
   cursor: pointer;
   position: relative;
   transition: all 0.15s ease;
   border: 2px solid transparent;
+  line-height: 1.2;
+  gap: 1px;
 }
 
 .kitty-day:hover:not(.empty) {
@@ -316,14 +319,15 @@ body[data-theme="dark"] .ProseMirror img:hover {
   font-weight: 700;
 }
 
+/* Dot only shows when there's an entry but no mood emoji */
 .kitty-day.has-entry::after {
   content: '';
   position: absolute;
-  bottom: 3px;
+  bottom: 2px;
   left: 50%;
   transform: translateX(-50%);
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
   background: #f472b6;
 }

@@ -5,6 +5,7 @@ import { Save, Trash2, ChevronDown, Sparkles, Calendar } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useDiary } from '../../context/DiaryContext';
 import RichTextEditor from '../../components/editor/RichTextEditor';
+import { OnThisDay } from '../../components/diary/DiaryFeatures';
 import toast from 'react-hot-toast';
 
 const FONTS = [
@@ -69,7 +70,8 @@ const MOOD_LABELS = {
 
 export default function DiaryPage() {
   const { user } = useAuth();
-  const { selectedDate, currentEntry, fetchEntryByDate, saveEntry, deleteEntry } = useDiary();
+  const { selectedDate, currentEntry, fetchEntryByDate, saveEntry, deleteEntry,
+          entries, fetchEntries } = useDiary();
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -95,6 +97,11 @@ export default function DiaryPage() {
     }
     setIsDirty(false);
   }, [currentEntry, selectedDate]);
+
+  // Fetch all entries once on mount (needed for OnThisDay)
+  useEffect(() => {
+    if (!entries || entries.length === 0) fetchEntries();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-save logic (every 30 seconds when dirty)
   useEffect(() => {
@@ -207,6 +214,9 @@ export default function DiaryPage() {
             </div>
           </div>
         </motion.div>
+
+        {/* On This Day — user's own memories */}
+        <OnThisDay entries={entries} />
 
         {/* Editor Card */}
         <motion.div

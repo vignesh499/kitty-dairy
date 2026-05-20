@@ -7,17 +7,19 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useDiary } from '../../context/DiaryContext';
+import { StreakBadge, useStreak } from '../diary/DiaryFeatures';
 import toast from 'react-hot-toast';
 
 const MOODS = ['😊', '😢', '😍', '😤', '😴', '🥳', '😰', '🤔', '😌', '🥺'];
 
 export default function Sidebar({ collapsed, setCollapsed }) {
   const { user, logout } = useAuth();
-  const { calendarDates, selectedDate, setSelectedDate, fetchEntryByDate, fetchCalendarDates } = useDiary();
+  const { calendarDates, selectedDate, setSelectedDate, fetchEntryByDate, fetchCalendarDates, entries } = useDiary();
   const navigate = useNavigate();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileOpen, setMobileOpen] = useState(false);
+  const streak = useStreak(entries);
 
   const today = new Date();
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
@@ -144,6 +146,9 @@ export default function Sidebar({ collapsed, setCollapsed }) {
         </NavLink>
       </nav>
 
+      {/* Streak Badge */}
+      <StreakBadge streak={streak} collapsed={collapsed} />
+
       {/* Mini Calendar */}
       {!collapsed && (
         <div className="px-3 mb-4 flex-1">
@@ -186,10 +191,11 @@ export default function Sidebar({ collapsed, setCollapsed }) {
                       ${isSelected && !isToday ? 'selected' : ''}
                       ${hasEntry ? 'has-entry' : ''}
                     `}
-                    style={{ fontSize: '0.7rem', minHeight: '24px' }}
+                    style={{ fontSize: '0.62rem', minHeight: '30px', flexDirection: 'column', gap: '1px' }}
                     title={mood ? `Mood: ${mood}` : undefined}
                   >
-                    {day}
+                    <span>{day}</span>
+                    {mood && <span style={{ fontSize: '0.7rem', lineHeight: 1 }}>{mood}</span>}
                   </div>
                 );
               })}
