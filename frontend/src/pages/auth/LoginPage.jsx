@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 import { Eye, EyeOff, Heart, Sparkles } from 'lucide-react';
+import ParticleBackground from '../../components/effects/ParticleBackground';
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -29,10 +30,8 @@ export default function LoginPage() {
 
   return (
     <div className="diary-bg flex items-center justify-center min-h-screen p-4">
-      {/* Decorative blobs */}
-      <div className="fixed top-20 left-10 w-64 h-64 bg-pink-200/30 rounded-full blur-3xl pointer-events-none" />
-      <div className="fixed bottom-20 right-10 w-72 h-72 bg-purple-200/30 rounded-full blur-3xl pointer-events-none" />
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-100/20 rounded-full blur-3xl pointer-events-none" />
+      {/* Animated mesh gradient background */}
+      <ParticleBackground />
 
       <motion.div
         initial={{ opacity: 0, y: 30 }}
